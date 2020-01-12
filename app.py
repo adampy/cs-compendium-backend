@@ -4,7 +4,14 @@ import csv
 import os
 
 DB = os.environ['DATABASE_URL']
+k = os.environ['KEYS'].split(";")
 app = Flask(__name__)
+
+def keycheck(request):
+    key = request.form.get('key')
+    if key not in k:
+        return False
+    return True
 
 @app.route('/getmsg/', methods=['GET'])
 def respond():
@@ -58,9 +65,12 @@ def index():
 /alltopics - gets all topics</h3></pre>"""
 
 #----TERMS----
-@app.route('/term/<int:termid>')
+@app.route('/term/<int:termid>', methods=['GET'])
 def get_term(termid):
     '''Get a term given its ID'''
+    if not keycheck(request):
+        return jsonify(None)
+    
     conn = psycopg2.connect(DB, sslmode='require')
     cur = conn.cursor()
     cur.execute("SELECT * FROM terms WHERE ID = %s", (termid,))
@@ -71,9 +81,12 @@ def get_term(termid):
     except IndexError:
         return jsonify(None)
 
-@app.route('/terms/<int:topicid>')
+@app.route('/terms/<int:topicid>', methods=['GET'])
 def get_terms(topicid):
     '''Get all the terms with a given topicid'''
+    if not keycheck(request):
+        return jsonify(None)
+    
     conn = psycopg2.connect(DB, sslmode='require')
     cur = conn.cursor()
     cur.execute("SELECT * FROM terms WHERE topicnumber = %s", (topicid,))
@@ -84,8 +97,12 @@ def get_terms(topicid):
     except Exception: #Broad error catch
         return jsonify(None)
 
-@app.route('/allterms')
+@app.route('/allterms', methods=['GET'])
 def get_all_terms():
+    '''Get all the terms in the term table'''
+    if not keycheck(request):
+        return jsonify(None)
+    
     conn = psycopg2.connect(DB, sslmode='require')
     cur = conn.cursor()
     cur.execute("SELECT * FROM terms")
@@ -97,9 +114,12 @@ def get_all_terms():
         return jsonify(None)
 
 #----TOPICS----
-@app.route('/topic/<int:topicid>')
+@app.route('/topic/<int:topicid>', methods=['GET'])
 def get_topic(topicid):
     '''Get a topic given its ID'''
+    if not keycheck(request):
+        return jsonify(None)
+    
     conn = psycopg2.connect(DB, sslmode='require')
     cur = conn.cursor()
     cur.execute("SELECT * FROM topics WHERE ID = %s", (topicid,))
@@ -110,8 +130,12 @@ def get_topic(topicid):
     except IndexError:
         return jsonify(None)
 
-@app.route('/alltopics')
+@app.route('/alltopics', methods=['GET'])
 def get_all_topics():
+    '''Get all the topics in the topic table'''
+    if not keycheck(request):
+        return jsonify(None)
+    
     conn = psycopg2.connect(DB, sslmode='require')
     cur = conn.cursor()
     cur.execute("SELECT * FROM topics")
