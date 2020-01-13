@@ -23,7 +23,6 @@ def index():
 <h3>/term/{termid} - gets a term with termid
 /terms/{topicid} - gets terms with topicid
 /allterms - gets all terms
-
 /topic/{topicid} - gets a term with topicid
 /alltopics - gets all topics</h3></pre>"""
 
@@ -108,6 +107,25 @@ def get_all_topics():
         return jsonify(topics)
     except Exception: #Broad error catch
         return jsonify(None)
+
+#----NEWDATA
+@app.route('/add/term', methods=['POST'])
+def add_term():
+    if not keycheck(request):
+        return jsonify(None)
+
+    topicid = request.form.get("topic")
+    term = request.form.get("topic")
+    definiton = request.form.get("definition")
+    if topicid is None or term is None or definition is None:
+        return jsonify(None)
+
+    conn = psycopg2.connect(DB, sslmode='require')
+    cur = conn.cursor()
+    cur.execute("INSERT INTO terms (topicnumber, term, definition) VALUES (%s, %s, %s)", (topic, term, definition))
+    conn.commit()
+    conn.close()
+    return jsonify(True)
 
 if __name__ == '__main__':
     app.run(threaded=True, port=5000)
