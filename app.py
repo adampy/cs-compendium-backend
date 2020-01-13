@@ -122,7 +122,7 @@ def add_term():
 
     conn = psycopg2.connect(DB, sslmode='require')
     cur = conn.cursor()
-    cur.execute("INSERT INTO terms (topicnumber, term, definition) VALUES (%s, %s, %s)", (topic, term, definition))
+    cur.execute("INSERT INTO terms (topicnumber, term, definition) VALUES (%s, %s, %s)", (topicid, term, definition))
     conn.commit()
     conn.close()
     return jsonify(True)
