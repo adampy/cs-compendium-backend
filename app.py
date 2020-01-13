@@ -8,7 +8,9 @@ k = os.environ['KEYS'].split(";")
 app = Flask(__name__)
 
 def keycheck(request):
-    key = request.form.get('key')
+    key = response.headers.get('key')
+    if key is None:
+        return False
     if key not in k:
         return False
     return True
