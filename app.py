@@ -119,7 +119,7 @@ def get_all_topics():
 #----NEWDATA----
 @app.route('/add/term', methods=['POST'])
 def add_term():
-    '''Add a term with form data'''[
+    '''Add a term with form data'''
     if not keycheck(request):
         return jsonify(None)
 
