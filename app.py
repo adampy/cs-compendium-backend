@@ -116,7 +116,7 @@ def add_term():
 
     topicid = request.form.get("topic")
     term = request.form.get("topic")
-    definiton = request.form.get("definition")
+    definition = request.form.get("definition")
     if topicid is None or term is None or definition is None:
         return jsonify(None)
 
