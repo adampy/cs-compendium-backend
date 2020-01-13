@@ -24,7 +24,7 @@ def index():
 /terms/{topicid} - gets terms with topicid
 /allterms - gets all terms
 
-/topic/{topicic} - gets a term with topicid
+/topic/{topicid} - gets a term with topicid
 /alltopics - gets all topics</h3></pre>"""
 
 #----TERMS----
