@@ -23,8 +23,16 @@ def index():
 <h3>/term/{termid} - gets a term with termid
 /terms/{topicid} - gets terms with topicid
 /allterms - gets all terms
+
 /topic/{topicid} - gets a term with topicid
-/alltopics - gets all topics</h3></pre>"""
+/alltopics - gets all topics
+
+/add/term - adds term with `term`, `topic`, `definition` form data
+/add/topic - adds a topic with `topic`, `colour` form data
+
+/remove/term/{termid} - removes a term with termid
+/remove/topic/{topicid} - removes a topic with topicid
+</h3></pre>"""
 
 #----TERMS----
 @app.route('/term/<int:termid>', methods=['GET'])
@@ -108,14 +116,15 @@ def get_all_topics():
     except Exception: #Broad error catch
         return jsonify(None)
 
-#----NEWDATA
+#----NEWDATA----
 @app.route('/add/term', methods=['POST'])
 def add_term():
+    '''Add a term with form data'''[
     if not keycheck(request):
         return jsonify(None)
 
     topicid = request.form.get("topic")
-    term = request.form.get("topic")
+    term = request.form.get("term")
     definition = request.form.get("definition")
     if topicid is None or term is None or definition is None:
         return jsonify(None)
@@ -123,6 +132,59 @@ def add_term():
     conn = psycopg2.connect(DB, sslmode='require')
     cur = conn.cursor()
     cur.execute("INSERT INTO terms (topicnumber, term, definition) VALUES (%s, %s, %s)", (topicid, term, definition))
+    conn.commit()
+    conn.close()
+    return jsonify(True)
+
+@app.route('/add/topic', methods=['POST'])
+def add_topic():
+    '''Adds a topic with form data'''
+    if not keycheck(request):
+        return jsonify(None)
+
+    topic = request.form.get("topic")
+    colour = request.form.get("colour")
+    if topic is None or colour is None:
+        return jsonify(None)
+
+    conn = psycopg2.connect(DB, sslmode='require')
+    cur = conn.cursor()
+    cur.execute("INSERT INTO topics (topic, colour) VALUES (%s, %s)", (topic, colour))
+    conn.commit()
+    conn.close()
+    return jsonify(True)
+
+#----REMOVEDATA----
+@app.route('/remove/term/<int:termid>', methods=['POST'])
+def remove_term():
+    '''Removes a term with a passed id'''
+    if not keycheck(request):
+        return jsonify(None)
+
+    termid = request.form.get("termid")
+    if termid is None:
+        return jsonify(None)
+
+    conn = psycopg2.connect(DB, sslmode='require')
+    cur = conn.cursor()
+    cur.execute("DELETE FROM terms WHERE topicnumber = %s", (termid,))
+    conn.commit()
+    conn.close()
+    return jsonify(True)
+
+@app.route('/remove/topic/<int:topicid>', methods=['POST'])
+def remove_topic():
+    '''Removes a topic with a passed id'''
+    if not keycheck(request):
+        return jsonify(None)
+
+    topicid = request.form.get("topicid")
+    if topicid is None:
+        return jsonify(None)
+
+    conn = psycopg2.connect(DB, sslmode='require')
+    cur = conn.cursor()
+    cur.execute("DELETE FROM topics WHERE id = %s", (topicid,))
     conn.commit()
     conn.close()
     return jsonify(True)
