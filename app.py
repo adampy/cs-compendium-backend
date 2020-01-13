@@ -38,7 +38,7 @@ def get_term(termid):
     cur = conn.cursor()
     cur.execute("SELECT * FROM terms WHERE ID = %s", (termid,))
     try:
-        term = cur.fetchall()[0]
+        term = cur.fetchall()
         conn.close()
         return jsonify(term)
     except IndexError:
@@ -87,7 +87,7 @@ def get_topic(topicid):
     cur = conn.cursor()
     cur.execute("SELECT * FROM topics WHERE ID = %s", (topicid,))
     try:
-        topic = cur.fetchall()[0]
+        topic = cur.fetchall()
         conn.close()
         return jsonify(topic)
     except IndexError:
