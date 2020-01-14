@@ -166,7 +166,7 @@ def remove_term(termid):
 
     conn = psycopg2.connect(DB, sslmode='require')
     cur = conn.cursor()
-    cur.execute("DELETE FROM terms WHERE topicnumber = %s", (termid,))
+    cur.execute("DELETE FROM terms WHERE id = %s", (termid,))
     conn.commit()
     conn.close()
     return jsonify(True)
