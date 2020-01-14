@@ -156,12 +156,11 @@ def add_topic():
 
 #----REMOVEDATA----
 @app.route('/remove/term/<int:termid>', methods=['POST'])
-def remove_term():
+def remove_term(termid):
     '''Removes a term with a passed id'''
     if not keycheck(request):
         return jsonify(None)
 
-    termid = request.form.get("termid")
     if termid is None:
         return jsonify(None)
 
@@ -173,12 +172,11 @@ def remove_term():
     return jsonify(True)
 
 @app.route('/remove/topic/<int:topicid>', methods=['POST'])
-def remove_topic():
+def remove_topic(topicid):
     '''Removes a topic with a passed id'''
     if not keycheck(request):
         return jsonify(None)
 
-    topicid = request.form.get("topicid")
     if topicid is None:
         return jsonify(None)
 
